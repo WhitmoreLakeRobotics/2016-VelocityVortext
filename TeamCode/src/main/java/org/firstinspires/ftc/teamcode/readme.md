@@ -1,6 +1,5 @@
 ## TeamCode Module
 
-sshew 9/14/16 - small inconsequential change to test GIT functionality
 Welcome!
 
 This module, TeamCode, is the place where you will write/paste the code for your team's
