@@ -37,7 +37,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -61,6 +64,7 @@ public class chocolate_prototype extends OpMode
 
      private DcMotor leftMotor = null;
      private DcMotor rightMotor = null;
+     private LightSensor lightSensor = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -73,14 +77,20 @@ public class chocolate_prototype extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor  = hardwareMap.dcMotor.get("left motor");
-        rightMotor = hardwareMap.dcMotor.get("right motor");
+        leftMotor  = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        lightSensor = hardwareMap.lightSensor.get("lightSensor");
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+        // telemetry.addData("Status", "Initialized")
+        //we need to rename everything hamilton
+
+
+
     }
 
     /*
