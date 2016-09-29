@@ -35,10 +35,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -57,14 +58,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Prototype", group="")  // @Autonomous(...) is the other common choice
-public class chocolate_prototype extends OpMode
-{
+public class chocolate_prototype extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-     private DcMotor leftMotor = null;
-     private DcMotor rightMotor = null;
-     private LightSensor lightSensor = null;
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private ColorSensor colorSensor = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -77,18 +77,17 @@ public class chocolate_prototype extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor  = hardwareMap.dcMotor.get("leftMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        lightSensor = hardwareMap.lightSensor.get("lightSensor");
 
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // telemetry.addData("Status", "Initialized")
         //we need to rename everything hamilton
-
 
 
     }
@@ -115,16 +114,34 @@ public class chocolate_prototype extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+        int lightAlpha = colorSensor.alpha();
+        telemetry.addData("ColorSensor Alpha: ", lightAlpha);
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-         leftMotor.setPower(.25);
-         rightMotor.setPower(.25);
+
+        if (lightAlpha > 15) {
+            leftMotor.setPower(.15);
+            rightMotor.setPower(.25);
+
+        } else {
+            leftMotor.setPower(.25);
+            rightMotor.setPower(.15);
+
+
+
+
+
+
+
+        }
     }
+    //datboi
+}
+
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-    }
 
-}
+
+
+
