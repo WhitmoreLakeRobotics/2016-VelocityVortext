@@ -48,8 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
+*
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
  *
@@ -119,12 +118,15 @@ public class chocolate_prototype extends OpMode {
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
 
         if (lightAlpha > 15) {
-            leftMotor.setPower(.15);
-            rightMotor.setPower(.25);
+            leftMotor.setPower(.8);
+            rightMotor.setPower(.2);
 
         } else {
-            leftMotor.setPower(.25);
-            rightMotor.setPower(.15);
+            leftMotor.setPower(.2);
+            rightMotor.setPower(.8);
+
+
+
 
 
 
@@ -134,8 +136,8 @@ public class chocolate_prototype extends OpMode {
 
         }
     }
-    //datboi
 }
+//datboi
 
 
     /*
