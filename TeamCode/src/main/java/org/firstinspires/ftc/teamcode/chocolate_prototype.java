@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -48,15 +49,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
-*
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Prototype", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
 public class chocolate_prototype extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -64,6 +65,8 @@ public class chocolate_prototype extends OpMode {
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
     private ColorSensor colorSensor = null;
+    private GyroSensor gyroSensor = null;
+    int state = 1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -78,9 +81,11 @@ public class chocolate_prototype extends OpMode {
          */
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        gyroSensor.calibrate();
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -115,25 +120,43 @@ public class chocolate_prototype extends OpMode {
 
         int lightAlpha = colorSensor.alpha();
         telemetry.addData("ColorSensor Alpha: ", lightAlpha);
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+        int gyroAngle = gyroSensor.getHeading();
+        telemetry.addData("gyroSensor.getHeading: ", gyroAngle);
+        telemetry.addData("state:" ,state);
 
-        if (lightAlpha > 15) {
-            leftMotor.setPower(.8);
-            rightMotor.setPower(.2);
-
-        } else {
-            leftMotor.setPower(.2);
-            rightMotor.setPower(.8);
-
-
+        if (state == 1) {
+            leftMotor.setPower(1);
+            rightMotor.setPower(1);
+            if (lightAlpha < 15) {
+                state = 2;
 
 
+            }
+        }
+        if(state == 2){
+            leftMotor.setPower(-1);
+            rightMotor.setPower(1);
+            if(gyroAngle > 270) {
+                state = 3;
+            }
+
+
+
+        }
 
 
 
 
 
+        if (state == 3) {
+            if (lightAlpha > 15) {
+                leftMotor.setPower(.8);
+                rightMotor.setPower(.12);
 
+            } else {
+                leftMotor.setPower(.12);
+                rightMotor.setPower(.8);
+            }
         }
     }
 }
