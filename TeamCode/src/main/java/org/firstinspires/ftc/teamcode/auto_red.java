@@ -35,39 +35,32 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
- * <p>
+ * class is instantiated on the Robot Controller and executed.
+ *
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
-public class chocolate_prototype extends OpMode {
+@Autonomous(name="AUTO RED", group="")  // @Autonomous(...) is the other common choice
+
+public class auto_red extends OpMode
+{
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    private ColorSensor colorSensor = null;
-    private GyroSensor gyroSensor = null;
-    private MRI_RangeFinder rangeFinder = null;
-    int state = 1;
+    // private DcMotor leftMotor = null;
+    // private DcMotor rightMotor = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -80,22 +73,14 @@ public class chocolate_prototype extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
-        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        // leftMotor  = hardwareMap.dcMotor.get("left motor");
+        // rightMotor = hardwareMap.dcMotor.get("right motor");
 
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        gyroSensor.calibrate();
-        rangeFinder = new MRI_RangeFinder(hardwareMap.i2cDevice.get("rangeSensor"));
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized")
-        //we need to rename everything hamilton
-
-
+        // telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -120,58 +105,16 @@ public class chocolate_prototype extends OpMode {
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        int lightAlpha = colorSensor.alpha();
-        telemetry.addData("ColorSensor Alpha: ", lightAlpha);
-        int gyroAngle = gyroSensor.getHeading();
-        telemetry.addData("gyroSensor.getHeading: ", gyroAngle);
-        telemetry.addData("state:", state);
-        int distance = rangeFinder.getDistanceCM();
-        telemetry.addData("rangeSensor: ", distance);
-
-        if (state == 1) {
-            leftMotor.setPower(1);
-            rightMotor.setPower(1);
-            if (lightAlpha > 15) {
-                state = 2;
-
-
-            }
-        }
-        if (state == 2) {
-            leftMotor.setPower(-1);
-            rightMotor.setPower(1);
-            if (gyroAngle < 85) {
-                state = 3;
-            }
-
-
-        }
-
-
-        if (state == 3) {
-//            if (lightAlpha > 15) {
-//                leftMotor.setPower(.5);
-//                rightMotor.setPower(.12);
-//
-//            } else {
-//                leftMotor.setPower(.12);
-//                rightMotor.setPower(.5);
-//            }
-            leftMotor.setPower(1);
-            rightMotor.setPower(1);
-            if (distance < 40) {
-            }
-        }
+        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+        // leftMotor.setPower(-gamepad1.left_stick_y);
+        // rightMotor.setPower(-gamepad1.right_stick_y);
     }
-
-}
-//datboi
-
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
+    @Override
+    public void stop() {
+    }
 
-
-
-
+}
