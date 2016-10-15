@@ -36,6 +36,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -52,12 +55,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AUTO RED", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name="Blue Ramp", group="")  // @Autonomous(...) is the other common choice
 
-public class auto_red extends OpMode
+public class auto_blue_ramp extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private ColorSensor colorSensor = null;
+    private GyroSensor gyroSensor = null;
+    private MRI_RangeFinder rangeFinder = null;
+    int stage = 1;
 
     // private DcMotor leftMotor = null;
     // private DcMotor rightMotor = null;
