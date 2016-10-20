@@ -120,21 +120,30 @@ public class auto_blue_corner extends OpMode
      */
     @Override
     public void loop() {
+
+
+        double leftcm = Settings.Tics2CM(leftMotor.getCurrentPosition());
+        double rightcm = Settings.Tics2CM(rightMotor.getCurrentPosition());
+        double averagecm = (leftcm + rightcm)/2;
         telemetry.addData("Status", "Running: " + runtime.toString());
-          int lightAlpha = colorSensor.alpha();
-        if (stage == Settings.stageBlueCorner1Forward){
+
+
+        telemetry.addData("status", "encoder average;" + averagecm);
+        int lightAlpha = colorSensor.alpha();
+        if (stage == Settings.stageBlueCorner1Forward) {
             leftMotor.setPower(Settings.normalDriveSpeed);
             rightMotor.setPower(Settings.normalDriveSpeed);
-            if (lightAlpha >) ()
+            if (lightAlpha > Settings.blueLine) {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+            }
         }
-
     }
-
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void stop(){
     }
 
 }
