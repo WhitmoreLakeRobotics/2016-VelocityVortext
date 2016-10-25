@@ -21,7 +21,8 @@ public class Settings {
     public static double lineFollowHigh = .8;
     public static double lineFollowLow = .25;
     public static int stage3Distance = 50;
-
+    public static int stage1FIRE = 1;
+    public static int stage2Charge = 2;
 
 
 
