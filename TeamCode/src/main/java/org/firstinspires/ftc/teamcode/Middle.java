@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -63,7 +64,11 @@ public class Middle extends OpMode
     private DcMotor rightShootMotor = null;
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
+    private Servo shootTrigger = null;
+
+
     int Stage;
+
 
 
     /*
@@ -74,7 +79,7 @@ public class Middle extends OpMode
         telemetry.addData("Status", "Initialized");
         Stage = Settings.stage1FIRE;
 
-      //  leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        //leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         //rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
@@ -102,21 +107,32 @@ public class Middle extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-      //  leftShootMotor.setPower(.8);
-      //  rightShootMotor.setPower(.8);
+
+       //leftShootMotor.setPower(.8);
+       //rightShootMotor.setPower(.8);
         if (runtime.seconds() > 10) {
             Stage = Settings.stage2Charge;
+            leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         }
         Stage = Settings.stage2Charge;
 
         if (Stage == Settings.stage2Charge);
+
         leftDriveMotor.setPower(.35);
         rightDriveMotor.setPower(.35);
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
         double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
         double averagecm = (leftcm + rightcm) / 2;
+        if(averagecm>122){
+            Stage = Settings.stage3Stop;
+
+        }
+        if (Stage == Settings.stage3Stop)
+            leftDriveMotor.setPower(0);
+        rightDriveMotor.setPower(0);
         telemetry.addData("Status", "Running: " + runtime.toString());
     }
 

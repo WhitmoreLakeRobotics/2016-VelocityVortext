@@ -23,6 +23,7 @@ public class Settings {
     public static int stage3Distance = 50;
     public static int stage1FIRE = 1;
     public static int stage2Charge = 2;
+    public static int stage3Stop = 3;
 
 
 
