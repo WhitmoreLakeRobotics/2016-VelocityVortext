@@ -54,9 +54,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Midddle", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name="Corner", group="")  // @Autonomous(...) is the other common choice
 
-public class Middle extends OpMode
+public class Corner extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -130,7 +130,7 @@ public class Middle extends OpMode
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm > Settings.middleDriveDistance) {
+            if (averagecm > Settings.cornerDriveDistance) {
                 Stage = Settings.stage3Stop;
 
             }

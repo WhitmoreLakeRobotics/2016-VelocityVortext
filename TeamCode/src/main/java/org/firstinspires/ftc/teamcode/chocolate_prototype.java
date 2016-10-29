@@ -64,11 +64,12 @@ public class chocolate_prototype extends OpMode {
 
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
-    private ColorSensor colorSensor = null;
-    private GyroSensor gyroSensor = null;
-    private MRI_RangeFinder rangeFinder = null;
-    int state = 1;
+    //private ColorSensor colorSensor = null;
+    //private GyroSensor gyroSensor = null;
+    //private MRI_RangeFinder rangeFinder = null;
+    //int state = 1;
 
+    private SpeedController speedController = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -80,14 +81,14 @@ public class chocolate_prototype extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftDriveMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        gyroSensor.calibrate();
-        rangeFinder = new MRI_RangeFinder(hardwareMap.i2cDevice.get("rangeSensor"));
+        speedController = new SpeedController(15);
+       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
+       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+       // gyroSensor.calibrate();
+       // rangeFinder = new MRI_RangeFinder(hardwareMap.i2cDevice.get("rangeSensor"));
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -111,24 +112,33 @@ public class chocolate_prototype extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        speedController.Init(runtime.milliseconds(), leftMotor.getCurrentPosition());
     }
 
+
+
+
     /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+         * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+         */
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        int lightAlpha = colorSensor.alpha();
-        telemetry.addData("ColorSensor Alpha: ", lightAlpha);
-        int gyroAngle = gyroSensor.getHeading();
-        telemetry.addData("gyroSensor.getHeading: ", gyroAngle);
-        telemetry.addData("state:", state);
-        int distance = rangeFinder.getDistanceCM();
-        telemetry.addData("rangeSensor: ", distance);
+        //int lightAlpha = colorSensor.alpha();
+        //telemetry.addData("ColorSensor Alpha: ", lightAlpha);
+        //int gyroAngle = gyroSensor.getHeading();
+        //telemetry.addData("gyroSensor.getHeading: ", gyroAngle);
+       // telemetry.addData("state:", state);
+      // int distance = rangeFinder.getDistanceCM();
+       // telemetry.addData("rangeSensor: ", distance);
 
-        if (state == 1) {
+        leftMotor.setMaxSpeed(10);
+        rightMotor.setMaxSpeed(1);
+        leftMotor.setPower(1);
+        rightMotor.setPower(1);
+
+      /*  if (state == 1) {
             leftMotor.setPower(1);
             rightMotor.setPower(1);
             if (lightAlpha > 15) {
@@ -161,7 +171,7 @@ public class chocolate_prototype extends OpMode {
             rightMotor.setPower(1);
             if (distance < 40) {
             }
-        }
+        }*/
     }
 
 }

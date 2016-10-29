@@ -24,7 +24,9 @@ public class Settings {
     public static int stage1FIRE = 1;
     public static int stage2Charge = 2;
     public static int stage3Stop = 3;
-
+    public static double driveSpeed = 1;
+    public static int cornerDriveDistance = 145;
+    public static int middleDriveDistance = 135;
 
 
     public static double Tics2CM (int tics){
