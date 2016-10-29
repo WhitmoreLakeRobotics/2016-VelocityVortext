@@ -80,10 +80,11 @@ public class Middle extends OpMode
         Stage = Settings.stage1FIRE;
 
         //leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        //rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        //
+        // rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-
+        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /*
@@ -97,9 +98,10 @@ public class Middle extends OpMode
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
-        runtime.reset();
+    public void start() {runtime.reset();
+        Stage = Settings.stage1FIRE;
     }
+
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -107,34 +109,39 @@ public class Middle extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Status", "Stage; " + Stage);
+        if (Stage == Settings.stage1FIRE) {
+            //leftShootMotor.setPower(.8);
+            //rightShootMotor.setPower(.8);
+            if (runtime.seconds() > 10) {
+                Stage = Settings.stage2Charge;
+                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-       //leftShootMotor.setPower(.8);
-       //rightShootMotor.setPower(.8);
-        if (runtime.seconds() > 10) {
-            Stage = Settings.stage2Charge;
-            leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+            }
         }
-        Stage = Settings.stage2Charge;
 
-        if (Stage == Settings.stage2Charge);
+        if (Stage == Settings.stage2Charge) {
 
-        leftDriveMotor.setPower(.35);
-        rightDriveMotor.setPower(.35);
-        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-        double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-        double averagecm = (leftcm + rightcm) / 2;
-        if(averagecm>122){
-            Stage = Settings.stage3Stop;
+            leftDriveMotor.setPower(.5);
+            rightDriveMotor.setPower(.5);
 
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
+            if (averagecm > 122) {
+                Stage = Settings.stage3Stop;
+
+            }
         }
-        if (Stage == Settings.stage3Stop)
+        if (Stage == Settings.stage3Stop) {
             leftDriveMotor.setPower(0);
-        rightDriveMotor.setPower(0);
-        telemetry.addData("Status", "Running: " + runtime.toString());
+            rightDriveMotor.setPower(0);
+        }
+
+
     }
+
 
 
     @Override
