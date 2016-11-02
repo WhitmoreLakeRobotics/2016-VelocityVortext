@@ -27,6 +27,16 @@ public class Settings {
     public static double driveSpeed = 1;
     public static int cornerDriveDistance = 145;
     public static int middleDriveDistance = 135;
+    public static int stagecorner1shoot = 1;
+    public static double spinnerShooterAuto = .7;
+    public static int turnOffShooter = 6;
+    public static int launch = 69;
+    public static int reset = 33;
+    public static int firstLaunch = 2;
+    public static int firstReset = 3;
+    public static int secondLaunch = 4;
+    public static int secondReset = 5;
+    public static int stageDriveForwardcorner2 = 2;
 
 
     public static double Tics2CM (int tics){

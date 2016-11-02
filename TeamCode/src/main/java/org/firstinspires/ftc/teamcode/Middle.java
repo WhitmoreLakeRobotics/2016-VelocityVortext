@@ -108,7 +108,7 @@ public class Middle extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        telemetry.addData("Status", "Stage: " + Stage);
+        telemetry.addData("Status", "stage: " + Stage);
         if (Stage == Settings.stage1FIRE) {
             //leftShootMotor.setPower(.8);
             //rightShootMotor.setPower(.8);
