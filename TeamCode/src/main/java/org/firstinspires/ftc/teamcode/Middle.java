@@ -94,6 +94,11 @@ public class Middle extends OpMode {
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
+        leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     /*
@@ -120,7 +125,7 @@ public class Middle extends OpMode {
 
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        stage = Settings.stage1FIRE;
+
         if (stage == Settings.stage1FIRE) {
             leftShootMotor.setPower(Settings.spinnerShooterAuto);
             rightShootMotor.setPower(-Settings.spinnerShooterAuto);
@@ -140,10 +145,6 @@ public class Middle extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftDriveMotor.setPower(Settings.driveSpeed);
                 rightDriveMotor.setPower(Settings.driveSpeed);
                 stage = Settings.stage2Charge;
@@ -151,8 +152,6 @@ public class Middle extends OpMode {
             }
         }
         if (stage == Settings.stage2Charge) {
-
-
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
@@ -161,6 +160,7 @@ public class Middle extends OpMode {
 
             }
         }
+
         if (stage == Settings.stage3Stop) {
             leftDriveMotor.setPower(0);
             rightDriveMotor.setPower(0);
