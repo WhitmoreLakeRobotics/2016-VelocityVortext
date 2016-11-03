@@ -94,7 +94,7 @@ public class Corner extends OpMode {
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
-        stage = Settings.stagecorner1shoot;
+        
         leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
