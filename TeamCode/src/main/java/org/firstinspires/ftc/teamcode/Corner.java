@@ -35,8 +35,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -62,7 +66,10 @@ public class Corner extends OpMode {
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
-
+    private GyroSensor gyroSensor;
+    private DcMotor sweeperMotor = null;
+    private ColorSensor colorSensor;
+    private Servo beaconServo = null;
 
     int stage;
 
@@ -82,6 +89,11 @@ public class Corner extends OpMode {
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        shootTrigger = hardwareMap.servo.get("shootTrigger");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        beaconServo = hardwareMap.servo.get("bacon");
     }
 
     /*
@@ -110,7 +122,7 @@ public class Corner extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
         stage = Settings.stagecorner1shoot;
         if (stage == Settings.stagecorner1shoot) {
-            leftShootMotor.setPower(Settings.spinnerShooterAuto);
+            leftShootMotor.setPower(-Settings.spinnerShooterAuto);
             rightShootMotor.setPower(Settings.spinnerShooterAuto);
             if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
                 shootTrigger.setPosition(Settings.launch);
@@ -127,15 +139,16 @@ public class Corner extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-                stage = Settings.stage2Charge;
                 leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                stage = Settings.stage2Charge;
+
             }
         }
         if (stage == Settings.stage2Charge) {
-//
+
             leftDriveMotor.setPower(Settings.driveSpeed);
             rightDriveMotor.setPower(Settings.driveSpeed);
 

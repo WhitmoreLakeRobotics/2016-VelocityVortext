@@ -33,12 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -46,18 +48,17 @@ import com.qualcomm.robotcore.hardware.Servo;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Midddle", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Middle", group = "")  // @Autonomous(...) is the other common choice
 
-public class Middle extends OpMode
-{
+public class Middle extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -65,10 +66,12 @@ public class Middle extends OpMode
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
+    private GyroSensor gyroSensor;
+    private DcMotor sweeperMotor = null;
+    private ColorSensor colorSensor;
+    private Servo beaconServo = null;
 
-
-    int Stage;
-
+    int stage;
 
 
     /*
@@ -84,6 +87,13 @@ public class Middle extends OpMode
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        shootTrigger = hardwareMap.servo.get("shootTrigger");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        beaconServo = hardwareMap.servo.get("bacon");
     }
 
     /*
@@ -97,8 +107,9 @@ public class Middle extends OpMode
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {runtime.reset();
-        Stage = Settings.stage1FIRE;
+    public void start() {
+        runtime.reset();
+        stage = Settings.stage1FIRE;
     }
 
 
@@ -106,36 +117,52 @@ public class Middle extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
+
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        telemetry.addData("Status", "stage: " + Stage);
-        if (Stage == Settings.stage1FIRE) {
-            //leftShootMotor.setPower(.8);
-            //rightShootMotor.setPower(.8);
-            if (runtime.seconds() > 1) {
-                Stage = Settings.stage2Charge;
+        stage = Settings.stage1FIRE;
+        if (stage == Settings.stage1FIRE) {
+            leftShootMotor.setPower(-
+                    Settings.spinnerShooterAuto);
+            rightShootMotor.setPower(Settings.spinnerShooterAuto);
+
+            if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
+                shootTrigger.setPosition(Settings.launch);
+            }
+            if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
+                shootTrigger.setPosition(Settings.reset);
+            }
+            if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
+                shootTrigger.setPosition(Settings.launch);
+            }
+            if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
+                shootTrigger.setPosition(Settings.reset);
+            }
+            if (runtime.seconds() > Settings.turnOffShooter) {
+                leftShootMotor.setPower(0);
+                rightShootMotor.setPower(0);
                 leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftDriveMotor.setPower(Settings.driveSpeed);
+                rightDriveMotor.setPower(Settings.driveSpeed);
+                stage = Settings.stage2Charge;
 
             }
         }
+        if (stage == Settings.stage2Charge) {
 
-        if (Stage == Settings.stage2Charge) {
-//
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
 
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
             if (averagecm > Settings.middleDriveDistance) {
-                Stage = Settings.stage3Stop;
+                stage = Settings.stage3Stop;
 
             }
         }
-        if (Stage == Settings.stage3Stop) {
+        if (stage == Settings.stage3Stop) {
             leftDriveMotor.setPower(0);
             rightDriveMotor.setPower(0);
         }
@@ -143,10 +170,5 @@ public class Middle extends OpMode
 
     }
 
-
-
-    @Override
-    public void stop() {
-    }
 
 }
