@@ -12,6 +12,9 @@ public class Shooter {
     private double shooterSpeed = 1;
     private boolean triggerIsReset = false;
     private ElapsedTime shotTimer = null;
+    public timeTriggerUp = 1.0;
+    public timeTriggerDown = 2.0;
+
     Shooter (){
 
       leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
@@ -59,17 +62,38 @@ public class Shooter {
 
     public boolean isShotDone(){
       //This is to be called repeatedly to keep the shot progressing
-      if (shotTimer.time() > )
-
-      return false;
-
+      if (shotTimer.time() > timeTriggerUp + timeTriggerDown){
+        return isTriggerinPosition(settings.posTriggerReset, settings.posTriggerTol);
+      }
+      else {
+        return false;
+      }
     }
 
+    public void loop(){
+      // put this in the loop to make the shooter cycle
 
+
+    }
 
     private boolean isTriggerinPosition(double setPosition, double tol){
-      return false;
+      //Is the trigger in the requested position ?  with some tollerance window
+
+      currPos = shootTrigger.getCurrentPosition();
+      if (currPos > (setPosition - tol) ||
+           currPos < setPosition + tol )) {
+        retValue = true;
+      }
+      else{
+        retValue = false;
+      }
+
+      return reValue;
+
     }
+
+
+
 
     public void adjustSpeed(){
       //Read encoders and adjust speed as needed to bring it back to
