@@ -122,9 +122,8 @@ public class Middle extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
         stage = Settings.stage1FIRE;
         if (stage == Settings.stage1FIRE) {
-            leftShootMotor.setPower(-
-                    Settings.spinnerShooterAuto);
-            rightShootMotor.setPower(Settings.spinnerShooterAuto);
+            leftShootMotor.setPower(Settings.spinnerShooterAuto);
+            rightShootMotor.setPower(-Settings.spinnerShooterAuto);
 
             if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
                 shootTrigger.setPosition(Settings.launch);

@@ -122,8 +122,8 @@ public class Corner extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
         stage = Settings.stagecorner1shoot;
         if (stage == Settings.stagecorner1shoot) {
-            leftShootMotor.setPower(-Settings.spinnerShooterAuto);
-            rightShootMotor.setPower(Settings.spinnerShooterAuto);
+            leftShootMotor.setPower(Settings.spinnerShooterAuto);
+            rightShootMotor.setPower(-Settings.spinnerShooterAuto);
             if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
                 shootTrigger.setPosition(Settings.launch);
             }
