@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
-t import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.util.Hardware;
 
 
 public class Shooter extends OpMode {
