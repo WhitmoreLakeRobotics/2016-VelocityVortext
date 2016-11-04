@@ -25,10 +25,12 @@ public class Settings {
     public static int stage2Charge = 2;
     public static int stage3Stop = 3;
     public static double driveSpeed = 1;
-    public static int cornerDriveDistance = 145;
-    public static int middleDriveDistance = 135;
+    public static int cornerDriveDistance = 120;
+    public static int middleDriveDistance = 134;
+    public static int beforeShootDrive = 25;
     public static int stagecorner1shoot = 1;
-    public static double spinnerShooterAuto = .7;
+    public static double spinnerShooterAuto = 1;
+    public static double spinnerShooterMiddle = .9;
     public static int turnOffShooter = 6;
     public static int launch = 69;
     public static int reset = 33;

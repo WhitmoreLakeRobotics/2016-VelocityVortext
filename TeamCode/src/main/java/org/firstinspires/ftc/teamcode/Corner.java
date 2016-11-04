@@ -94,6 +94,10 @@ public class Corner extends OpMode {
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
+        leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /*
@@ -101,6 +105,7 @@ public class Corner extends OpMode {
      */
     @Override
     public void init_loop() {
+
     }
 
     /*
@@ -120,41 +125,43 @@ public class Corner extends OpMode {
 
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        stage = Settings.stagecorner1shoot;
-        if (stage == Settings.stagecorner1shoot) {
-            leftShootMotor.setPower(Settings.spinnerShooterAuto);
-            rightShootMotor.setPower(-Settings.spinnerShooterAuto);
-            if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
-                shootTrigger.setPosition(Settings.launch);
-            }
-            if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
-                shootTrigger.setPosition(Settings.reset);
-            }
-            if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
-                shootTrigger.setPosition(Settings.launch);
-            }
-            if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
-                shootTrigger.setPosition(Settings.reset);
-            }
-            if (runtime.seconds() > Settings.turnOffShooter) {
-                leftShootMotor.setPower(0);
-                rightShootMotor.setPower(0);
-                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                stage = Settings.stage2Charge;
+        double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+        double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+        double averagecm = (leftcm + rightcm) / 2;
+        if (averagecm > Settings.beforeShootDrive) {
+            if (averagecm > Settings.beforeShootDrive ) {
+                leftShootMotor.setPower(Settings.spinnerShooterAuto);
+                rightShootMotor.setPower(-Settings.spinnerShooterAuto);
+                if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
+                    shootTrigger.setPosition(Settings.launch);
+                }
+                if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
+                    shootTrigger.setPosition(Settings.reset);
+                }
+                if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
+                    shootTrigger.setPosition(Settings.launch);
+                }
+                if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
+                    shootTrigger.setPosition(Settings.reset);
+                }
+                if (runtime.seconds() > Settings.turnOffShooter) {
+                    leftShootMotor.setPower(0);
+                    rightShootMotor.setPower(0);
 
+                    stage = Settings.stage2Charge;
+
+                }
             }
         }
+
         if (stage == Settings.stage2Charge) {
 
             leftDriveMotor.setPower(Settings.driveSpeed);
             rightDriveMotor.setPower(Settings.driveSpeed);
 
-            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-            double averagecm = (leftcm + rightcm) / 2;
+             leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+             rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+             averagecm = (leftcm + rightcm) / 2;
             if (averagecm > Settings.cornerDriveDistance) {
                 stage = Settings.stage3Stop;
 
