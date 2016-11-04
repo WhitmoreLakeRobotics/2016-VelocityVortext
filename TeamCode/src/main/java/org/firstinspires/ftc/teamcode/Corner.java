@@ -66,9 +66,9 @@ public class Corner extends OpMode {
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
-    private GyroSensor gyroSensor;
+   // private GyroSensor gyroSensor;
     private DcMotor sweeperMotor = null;
-    private ColorSensor colorSensor;
+   // private ColorSensor colorSensor;
     private Servo beaconServo = null;
 
     int stage;
@@ -90,9 +90,9 @@ public class Corner extends OpMode {
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         shootTrigger = hardwareMap.servo.get("shootTrigger");
-        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
     }
 
@@ -120,7 +120,7 @@ public class Corner extends OpMode {
 
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        stage = Settings.stagecorner1shoot;
+
         if (stage == Settings.stagecorner1shoot) {
             leftShootMotor.setPower(Settings.spinnerShooterAuto);
             rightShootMotor.setPower(-Settings.spinnerShooterAuto);
@@ -137,8 +137,8 @@ public class Corner extends OpMode {
                 shootTrigger.setPosition(Settings.reset);
             }
             if (runtime.seconds() > Settings.turnOffShooter) {
-                leftShootMotor.setPower(0);
-                rightShootMotor.setPower(0);
+                leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

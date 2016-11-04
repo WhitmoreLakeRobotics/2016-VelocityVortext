@@ -66,10 +66,10 @@ public class Middle extends OpMode {
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
-    private GyroSensor gyroSensor;
+    //private GyroSensor gyroSensor = null;
     private DcMotor sweeperMotor = null;
-    private ColorSensor colorSensor;
     private Servo beaconServo = null;
+    //privste ColorSensor colorSensor = null;
 
     int stage;
 
@@ -81,18 +81,17 @@ public class Middle extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        //leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        //
-        // rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         shootTrigger = hardwareMap.servo.get("shootTrigger");
-        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
         leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -142,8 +141,8 @@ public class Middle extends OpMode {
                 shootTrigger.setPosition(Settings.reset);
             }
             if (runtime.seconds() > Settings.turnOffShooter) {
-                leftShootMotor.setPower(0);
-                rightShootMotor.setPower(0);
+                leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 leftDriveMotor.setPower(Settings.driveSpeed);
                 rightDriveMotor.setPower(Settings.driveSpeed);
                 stage = Settings.stage2Charge;
