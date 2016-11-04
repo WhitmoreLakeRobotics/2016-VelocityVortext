@@ -98,10 +98,6 @@ public class Middle extends OpMode {
         rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
     }
 
     /*
@@ -148,24 +144,15 @@ public class Middle extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-<<<<<<< HEAD
-
-
-=======
                 leftDriveMotor.setPower(Settings.driveSpeed);
                 rightDriveMotor.setPower(Settings.driveSpeed);
->>>>>>> origin/master
                 stage = Settings.stage2Charge;
 
             }
         }
         if (stage == Settings.stage2Charge) {
-<<<<<<< HEAD
-
             leftDriveMotor.setPower(Settings.driveSpeed);
             rightDriveMotor.setPower(Settings.driveSpeed);
-=======
->>>>>>> origin/master
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
