@@ -35,9 +35,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -54,9 +53,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Middle", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "shoot only", group = "")  // @Autonomous(...) is the other common choice
 
-public class Middle extends OpMode {
+public class shoot_only extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -64,7 +63,7 @@ public class Middle extends OpMode {
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
-    private GyroSensor gyroSensor = null;
+    //private GyroSensor gyroSensor = null;
     private DcMotor sweeperMotor = null;
     private Servo beaconServo = null;
     //privste ColorSensor colorSensor = null;
@@ -89,7 +88,7 @@ public class Middle extends OpMode {
         shootTrigger = hardwareMap.servo.get("trigger");
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
@@ -147,56 +146,28 @@ public class Middle extends OpMode {
              leftShootMotor.setPower(0);
              rightShootMotor.setPower(0);
                 shootTrigger.setPosition(Settings.reset);
-                leftDriveMotor.setPower(Settings.driveSpeed);
-                rightDriveMotor.setPower(Settings.driveSpeed);
+//                leftDriveMotor.setPower(Settings.driveSpeed);
+//                rightDriveMotor.setPower(Settings.driveSpeed);
                 stage = Settings.stage2Charge;
 
             }
         }
-        if (stage == Settings.stage2Charge) {
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
-            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-            double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm > Settings.middleDriveDistance) {
-                stage = Settings.stage3turn180;
+//        if (stage == Settings.stage2Charge) {
+//            leftDriveMotor.setPower(Settings.driveSpeed);
+//            rightDriveMotor.setPower(Settings.driveSpeed);
+//            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+//            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+//            double averagecm = (leftcm + rightcm) / 2;
+//            if (averagecm > Settings.middleDriveDistance) {
+//                stage = Settings.stage3turn180;
+//
+//            }
+//        }
 
-            }
-        }
-        if (stage == Settings.stage3turn180){
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(-Settings.driveSpeed);
-           if (gyroSensor.getHeading() > 180){
-               leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-               rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-               leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-               rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-               stage = Settings.stage4backup;
-           }
-        }
-        if (stage == Settings.stage4backup){
-            leftDriveMotor.setPower(-Settings.driveSpeed);
-            rightDriveMotor.setPower(-Settings.driveSpeed);
-            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-            double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm < Settings.middleBackupDriveDistance) {
-                stage = Settings.stage5stop;
-
-            }
-        }
-
-
-
-
-
-
-        if (stage == Settings.stage5stop) {
-            leftDriveMotor.setPower(0);
-            rightDriveMotor.setPower(0);
-
-        }
+//        if (stage == Settings.stage3turn180) {
+//            leftDriveMotor.setPower(0);
+//            rightDriveMotor.setPower(0);
+//        }
 
 
     }

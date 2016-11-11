@@ -32,23 +32,21 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
+ * class is instantiated on the Robot Controller and executed.
  * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
@@ -57,20 +55,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
-@Disabele
-public class chocolate_prototype extends OpMode {
+@TeleOp(name = "The teleop", group = "")  // @Autonomous(...) is the other common choice
+
+public class Tele_Op extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftShootMotor = null;
+    private DcMotor rightShootMotor = null;
+    private DcMotor rightDriveMotor = null;
+    private DcMotor leftDriveMotor = null;
+    private DcMotor sweeperMotor = null;
+    private Servo shootTrigger;
+    private Servo beaconServo;
+    private boolean rightTriggerPressed;
+    private boolean BeaconServoLeft;
+    private boolean leftBummperPrevPressed;
+    //private ColorSensor colorSensor;
+    //private GyroSensor gyroSensor;
 
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    //private ColorSensor colorSensor = null;
-    //private GyroSensor gyroSensor = null;
-    //private MRI_RangeFinder rangeFinder = null;
-    //int state = 1;
-
-    private SpeedController speedController = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -82,22 +84,26 @@ public class chocolate_prototype extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor = hardwareMap.dcMotor.get("leftDriveMotor");
-        rightMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        speedController = new SpeedController(15);
-       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
-       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-       // gyroSensor.calibrate();
-       // rangeFinder = new MRI_RangeFinder(hardwareMap.i2cDevice.get("rangeSensor"));
+        leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
+        rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
+        leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+        leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        beaconServo = hardwareMap.servo.get("bacon");
+        shootTrigger = hardwareMap.servo.get("trigger");
+        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        rightTriggerPressed = false;
+
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized")
-        //we need to rename everything hamilton
-
-
+        // telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -113,76 +119,60 @@ public class chocolate_prototype extends OpMode {
     @Override
     public void start() {
         runtime.reset();
-        speedController.Init(runtime.milliseconds(), leftMotor.getCurrentPosition());
+        shootTrigger.setPosition(Settings.reset);
     }
-
-
-
 
     /*
-         * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-         */
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     */
     @Override
     public void loop() {
+        telemetry.addData("Status", shootTrigger.getPosition());
         telemetry.addData("Status", "Running: " + runtime.toString());
+        leftDriveMotor.setPower(-gamepad1.left_stick_y);
+        rightDriveMotor.setPower(-gamepad1.right_stick_y);
+        if (gamepad2.right_trigger == 1 && rightTriggerPressed == false) {
+            rightTriggerPressed = true;
 
-        //int lightAlpha = colorSensor.alpha();
-        //telemetry.addData("ColorSensor Alpha: ", lightAlpha);
-        //int gyroAngle = gyroSensor.getHeading();
-        //telemetry.addData("gyroSensor.getHeading: ", gyroAngle);
-       // telemetry.addData("state:", state);
-      // int distance = rangeFinder.getDistanceCM();
-       // telemetry.addData("rangeSensor: ", distance);
-
-        leftMotor.setMaxSpeed(10);
-        rightMotor.setMaxSpeed(1);
-        leftMotor.setPower(1);
-        rightMotor.setPower(1);
-
-      /*  if (state == 1) {
-            leftMotor.setPower(1);
-            rightMotor.setPower(1);
-            if (lightAlpha > 15) {
-                state = 2;
-
-
-            }
+        } else if (gamepad2.right_trigger == 1 && rightTriggerPressed == true) {
+            rightTriggerPressed = false;
         }
-        if (state == 2) {
-            leftMotor.setPower(-1);
-            rightMotor.setPower(1);
-            if (gyroAngle < 85) {
-                state = 3;
-            }
-
-
+        if (rightTriggerPressed) {
+            leftShootMotor.setPower(Settings.shooterSpeedTeleOP);
+            rightShootMotor.setPower(Settings.shooterSpeedTeleOP);
+        } else {
+            leftShootMotor.setPower(0);
+            rightShootMotor.setPower(0);
+        }
+        if (gamepad2.left_bumper && leftBummperPrevPressed == false) {
+            leftBummperPrevPressed = true;
+            BeaconServoLeft = !BeaconServoLeft;
+        } else if (!gamepad2.left_bumper && leftBummperPrevPressed == true) {
+            leftBummperPrevPressed = false;
         }
 
+        if (BeaconServoLeft) {
+            beaconServo.setPosition(Settings.beaconRight);
+        } else {
 
-        if (state == 3) {
-//            if (lightAlpha > 15) {
-//                leftMotor.setPower(.5);
-//                rightMotor.setPower(.12);
-//
-//            } else {
-//                leftMotor.setPower(.12);
-//                rightMotor.setPower(.5);
-//            }
-            leftMotor.setPower(1);
-            rightMotor.setPower(1);
-            if (distance < 40) {
-            }
-        }*/
+            beaconServo.setPosition(Settings.beaconLeft);
+        }
+
+        sweeperMotor.setPower(-gamepad2.left_stick_y);
+        if (gamepad2.right_bumper) {
+            shootTrigger.setPosition(Settings.launch);
+        } else {
+            shootTrigger.setPosition(Settings.reset);
+
+        }
+
     }
-
-}
-//datboi
-
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
+    @Override
+    public void stop() {
+    }
 
-
-
-
+}

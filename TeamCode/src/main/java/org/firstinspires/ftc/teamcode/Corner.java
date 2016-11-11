@@ -35,11 +35,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Hardware;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 /**
@@ -89,7 +86,9 @@ public class Corner extends OpMode {
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-        shootTrigger = hardwareMap.servo.get("shootTrigger");
+        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shootTrigger = hardwareMap.servo.get("trigger");
        // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
        // colorSensor = hardwareMap.colorSensor.get("colorSensor");
@@ -108,6 +107,7 @@ public class Corner extends OpMode {
      */
     @Override
     public void start() {
+        shootTrigger.setPosition(Settings.reset);
         runtime.reset();
         stage = Settings.stagecorner1shoot;
     }
@@ -137,8 +137,9 @@ public class Corner extends OpMode {
                 shootTrigger.setPosition(Settings.reset);
             }
             if (runtime.seconds() > Settings.turnOffShooter) {
-                leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftShootMotor.setPower(0);
+                rightShootMotor.setPower(0);
+                shootTrigger.setPosition(Settings.reset);
                 leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -156,11 +157,11 @@ public class Corner extends OpMode {
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
             if (averagecm > Settings.cornerDriveDistance) {
-                stage = Settings.stage3Stop;
+                stage = Settings.stage3turn180;
 
             }
         }
-        if (stage == Settings.stage3Stop) {
+        if (stage == Settings.stage3turn180) {
             leftDriveMotor.setPower(0);
             rightDriveMotor.setPower(0);
         }

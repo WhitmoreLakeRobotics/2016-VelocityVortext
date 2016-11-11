@@ -56,7 +56,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Blue Ramp", group="")  // @Autonomous(...) is the other common choice
-
+@Disabele
 public class auto_blue_ramp extends OpMode
 {
     /* Declare OpMode members. */
