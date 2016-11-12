@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -54,9 +55,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Middle", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Middle Blue", group = "")  // @Autonomous(...) is the other common choice
 
-public class Middle extends OpMode {
+public class MiddleBlue extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -86,6 +87,7 @@ public class Middle extends OpMode {
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
         shootTrigger = hardwareMap.servo.get("trigger");
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -123,13 +125,15 @@ public class Middle extends OpMode {
     @Override
 
     public void loop() {
+
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Status", "encoderTicks left   " + leftDriveMotor.getCurrentPosition());
         telemetry.addData("Status", "encoderTicks  right" +
                 "  " + rightDriveMotor.getCurrentPosition());
+        telemetry.addData("status", "gyroPosition " + gyroSensor.getHeading());
         if (stage == Settings.stage1FIRE) {
             leftShootMotor.setPower(Settings.spinnerShooterMiddle);
-            rightShootMotor.setPower(-Settings.spinnerShooterMiddle);
+            rightShootMotor.setPower(Settings.spinnerShooterMiddle);
 
             if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
                 shootTrigger.setPosition(Settings.launch);
@@ -167,7 +171,8 @@ public class Middle extends OpMode {
         if (stage == Settings.stage3turn180){
             leftDriveMotor.setPower(Settings.driveSpeed);
             rightDriveMotor.setPower(-Settings.driveSpeed);
-           if (gyroSensor.getHeading() > 180){
+            int gyroHeading = gyroSensor.getHeading();
+           if (gyroHeading > 175 && gyroHeading < 270 ){
                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

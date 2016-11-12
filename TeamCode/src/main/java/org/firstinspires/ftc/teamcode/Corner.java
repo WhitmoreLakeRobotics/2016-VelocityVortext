@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -86,6 +87,7 @@ public class Corner extends OpMode {
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shootTrigger = hardwareMap.servo.get("trigger");
@@ -123,7 +125,7 @@ public class Corner extends OpMode {
 
         if (stage == Settings.stagecorner1shoot) {
             leftShootMotor.setPower(Settings.spinnerShooterAuto);
-            rightShootMotor.setPower(-Settings.spinnerShooterAuto);
+            rightShootMotor.setPower(Settings.spinnerShooterAuto);
             if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
                 shootTrigger.setPosition(Settings.launch);
             }
