@@ -30,12 +30,12 @@ public class Settings {
     public static int stage5stop = 5;
     public static double driveSpeed = 1;
     public static int cornerDriveDistance = 155;
-    public static int middleDriveDistance = 149;
+    public static int middleDriveDistance = 100;
     public static int middleBackupDriveDistance = -30;
     public static int beforeShootDrive = 25;
     public static int stagecorner1shoot = 1;
     public static double spinnerShooterAuto = .3;
-    public static double spinnerShooterMiddle = .3;
+    public static double spinnerShooterMiddle = .1;
     public static int turnOffShooter = 6;
     public static double launch = .6;
     public static double reset = 0;
@@ -52,6 +52,9 @@ public class Settings {
     public static double Tics2CM (int tics){
         return tics / TicsPerCM;
     }
+    public static int shooterTicksPerRev = 28;
+    public static double shooterMotorMaxRPM = 6000;
+    public static double shooterRPM = 4150;
 }
 
 

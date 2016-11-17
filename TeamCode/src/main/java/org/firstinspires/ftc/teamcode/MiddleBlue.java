@@ -59,12 +59,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class MiddleBlue extends OpMode {
     /* Declare OpMode members. */
+    shoot doubleShooter = new shoot();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
     private DcMotor rightShootMotor = null;
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
-    private Servo shootTrigger = null;
     private GyroSensor gyroSensor = null;
     private DcMotor sweeperMotor = null;
     private Servo beaconServo = null;
@@ -80,17 +80,10 @@ public class MiddleBlue extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-        leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
-        shootTrigger = hardwareMap.servo.get("trigger");
-        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
@@ -99,6 +92,10 @@ public class MiddleBlue extends OpMode {
         rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gyroSensor.calibrate();
+        doubleShooter.hardwareMap = hardwareMap;
+        doubleShooter.telemetry = telemetry;
+        doubleShooter.init();
     }
 
     /*
@@ -106,6 +103,8 @@ public class MiddleBlue extends OpMode {
      */
     @Override
     public void init_loop() {
+
+
     }
 
     /*
@@ -113,9 +112,10 @@ public class MiddleBlue extends OpMode {
      */
     @Override
     public void start() {
-        shootTrigger.setPosition(Settings.reset);
+
         runtime.reset();
         stage = Settings.stage1FIRE;
+        doubleShooter.start();
     }
 
 
@@ -131,28 +131,11 @@ public class MiddleBlue extends OpMode {
         telemetry.addData("Status", "encoderTicks  right" +
                 "  " + rightDriveMotor.getCurrentPosition());
         telemetry.addData("status", "gyroPosition " + gyroSensor.getHeading());
+        doubleShooter.loop();
         if (stage == Settings.stage1FIRE) {
-            leftShootMotor.setPower(Settings.spinnerShooterMiddle);
-            rightShootMotor.setPower(Settings.spinnerShooterMiddle);
 
-            if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
-                shootTrigger.setPosition(Settings.launch);
-            }
-            if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
-                shootTrigger.setPosition(Settings.reset);
-            }
-            if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
-                shootTrigger.setPosition(Settings.launch);
-            }
-            if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
-                shootTrigger.setPosition(Settings.reset);
-            }
-            if (runtime.seconds() > Settings.turnOffShooter) {
-             leftShootMotor.setPower(0);
-             rightShootMotor.setPower(0);
-                shootTrigger.setPosition(Settings.reset);
-                leftDriveMotor.setPower(Settings.driveSpeed);
-                rightDriveMotor.setPower(Settings.driveSpeed);
+            if (doubleShooter.isDone()) {
+
                 stage = Settings.stage2Charge;
 
             }
@@ -172,7 +155,7 @@ public class MiddleBlue extends OpMode {
             leftDriveMotor.setPower(Settings.driveSpeed);
             rightDriveMotor.setPower(-Settings.driveSpeed);
             int gyroHeading = gyroSensor.getHeading();
-           if (gyroHeading > 175 && gyroHeading < 270 ){
+           if (gyroHeading > 170 && gyroHeading < 270 ){
                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

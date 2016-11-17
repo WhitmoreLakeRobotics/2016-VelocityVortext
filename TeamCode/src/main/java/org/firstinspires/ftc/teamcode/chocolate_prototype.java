@@ -113,7 +113,7 @@ public class chocolate_prototype extends OpMode {
     @Override
     public void start() {
         runtime.reset();
-        speedController.Init(runtime.milliseconds(), leftMotor.getCurrentPosition());
+        //speedController.Init(runtime.milliseconds(), leftMotor.getCurrentPosition());
     }
 
 

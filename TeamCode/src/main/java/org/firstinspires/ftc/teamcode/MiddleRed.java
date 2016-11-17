@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -53,17 +54,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "shoot only", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Middle Red", group = "")  // @Autonomous(...) is the other common choice
 
-public class shoot_only extends OpMode {
+public class MiddleRed extends OpMode {
     /* Declare OpMode members. */
+    shoot doubleShooter = new shoot();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
     private DcMotor rightShootMotor = null;
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
-    private Servo shootTrigger = null;
-    //private GyroSensor gyroSensor = null;
+    private GyroSensor gyroSensor = null;
     private DcMotor sweeperMotor = null;
     private Servo beaconServo = null;
     //privste ColorSensor colorSensor = null;
@@ -78,17 +79,11 @@ public class shoot_only extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-        shootTrigger = hardwareMap.servo.get("trigger");
-        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
@@ -96,6 +91,10 @@ public class shoot_only extends OpMode {
         rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gyroSensor.calibrate();
+        doubleShooter.hardwareMap = hardwareMap;
+        doubleShooter.telemetry = telemetry;
+        doubleShooter.init();
     }
 
     /*
@@ -103,6 +102,8 @@ public class shoot_only extends OpMode {
      */
     @Override
     public void init_loop() {
+
+
     }
 
     /*
@@ -110,9 +111,10 @@ public class shoot_only extends OpMode {
      */
     @Override
     public void start() {
-        shootTrigger.setPosition(Settings.reset);
+
         runtime.reset();
         stage = Settings.stage1FIRE;
+        doubleShooter.start();
     }
 
 
@@ -122,52 +124,66 @@ public class shoot_only extends OpMode {
     @Override
 
     public void loop() {
+
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Status", "encoderTicks left   " + leftDriveMotor.getCurrentPosition());
         telemetry.addData("Status", "encoderTicks  right" +
                 "  " + rightDriveMotor.getCurrentPosition());
+        telemetry.addData("status", "gyroPosition " + gyroSensor.getHeading());
+        doubleShooter.loop();
         if (stage == Settings.stage1FIRE) {
-            leftShootMotor.setPower(Settings.spinnerShooterMiddle);
-            rightShootMotor.setPower(-Settings.spinnerShooterMiddle);
 
-            if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
-                shootTrigger.setPosition(Settings.launch);
-            }
-            if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
-                shootTrigger.setPosition(Settings.reset);
-            }
-            if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
-                shootTrigger.setPosition(Settings.launch);
-            }
-            if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
-                shootTrigger.setPosition(Settings.reset);
-            }
-            if (runtime.seconds() > Settings.turnOffShooter) {
-             leftShootMotor.setPower(0);
-             rightShootMotor.setPower(0);
-                shootTrigger.setPosition(Settings.reset);
-//                leftDriveMotor.setPower(Settings.driveSpeed);
-//                rightDriveMotor.setPower(Settings.driveSpeed);
+            if (doubleShooter.isDone()) {
+
                 stage = Settings.stage2Charge;
 
             }
         }
-//        if (stage == Settings.stage2Charge) {
-//            leftDriveMotor.setPower(Settings.driveSpeed);
-//            rightDriveMotor.setPower(Settings.driveSpeed);
-//            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-//            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-//            double averagecm = (leftcm + rightcm) / 2;
-//            if (averagecm > Settings.middleDriveDistance) {
-//                stage = Settings.stage3turn180;
-//
-//            }
-//        }
+        if (stage == Settings.stage2Charge) {
+            leftDriveMotor.setPower(Settings.driveSpeed);
+            rightDriveMotor.setPower(Settings.driveSpeed);
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
+            if (averagecm > Settings.middleDriveDistance) {
+                stage = Settings.stage3turn180;
 
-//        if (stage == Settings.stage3turn180) {
-//            leftDriveMotor.setPower(0);
-//            rightDriveMotor.setPower(0);
-//        }
+            }
+        }
+        if (stage == Settings.stage3turn180){
+            leftDriveMotor.setPower(-Settings.driveSpeed);
+            rightDriveMotor.setPower(Settings.driveSpeed);
+            int gyroHeading = gyroSensor.getHeading();
+           if (gyroHeading < 190 && gyroHeading > 90 ){
+               leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+               rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+               leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+               rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+               stage = Settings.stage4backup;
+           }
+        }
+        if (stage == Settings.stage4backup){
+            leftDriveMotor.setPower(-Settings.driveSpeed);
+            rightDriveMotor.setPower(-Settings.driveSpeed);
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
+            if (averagecm < Settings.middleBackupDriveDistance) {
+                stage = Settings.stage5stop;
+
+            }
+        }
+
+
+
+
+
+
+        if (stage == Settings.stage5stop) {
+            leftDriveMotor.setPower(0);
+            rightDriveMotor.setPower(0);
+
+        }
 
 
     }
