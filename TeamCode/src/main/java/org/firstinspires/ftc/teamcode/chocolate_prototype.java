@@ -33,14 +33,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -49,10 +44,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
- * <p>
+ * <p/>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ * <p/>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
@@ -71,6 +66,7 @@ public class chocolate_prototype extends OpMode {
     //int state = 1;
 
     private SpeedController speedController = null;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -86,10 +82,10 @@ public class chocolate_prototype extends OpMode {
         rightMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         speedController = new SpeedController(15);
-       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
-       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-       // gyroSensor.calibrate();
-       // rangeFinder = new MRI_RangeFinder(hardwareMap.i2cDevice.get("rangeSensor"));
+        // colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        // gyroSensor.calibrate();
+        // rangeFinder = new MRI_RangeFinder(hardwareMap.i2cDevice.get("rangeSensor"));
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -117,8 +113,6 @@ public class chocolate_prototype extends OpMode {
     }
 
 
-
-
     /*
          * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
          */
@@ -130,9 +124,9 @@ public class chocolate_prototype extends OpMode {
         //telemetry.addData("ColorSensor Alpha: ", lightAlpha);
         //int gyroAngle = gyroSensor.getHeading();
         //telemetry.addData("gyroSensor.getHeading: ", gyroAngle);
-       // telemetry.addData("state:", state);
-      // int distance = rangeFinder.getDistanceCM();
-       // telemetry.addData("rangeSensor: ", distance);
+        // telemetry.addData("state:", state);
+        // int distance = rangeFinder.getDistanceCM();
+        // telemetry.addData("rangeSensor: ", distance);
 
         leftMotor.setMaxSpeed(10);
         rightMotor.setMaxSpeed(1);

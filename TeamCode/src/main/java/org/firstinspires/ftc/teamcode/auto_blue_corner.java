@@ -47,10 +47,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p>
+ * <p/>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ * <p/>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
@@ -58,15 +58,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Blue Corner", group = "")  // @Autonomous(...) is the other common choice
 @Disabled
 public class auto_blue_corner extends OpMode {
+    int stage;
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
     private ColorSensor colorSensor = null;
     private GyroSensor gyroSensor = null;
     private MRI_RangeFinder rangeFinder = null;
-    int stage;
 
 
     // private DcMotor leftMotor = null;
@@ -143,40 +142,39 @@ public class auto_blue_corner extends OpMode {
             leftMotor.setPower(Settings.normalDriveSpeed);
             rightMotor.setPower(-Settings.normalDriveSpeed);
             if (Headding > Settings.blueTapeAngle) {
-              leftMotor.setPower(0);
-              rightMotor.setPower(0);
-              stage = Settings.stageBlueCorner3Line;
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                stage = Settings.stageBlueCorner3Line;
 
             }
 
         }
-        if (stage == Settings.stageBlueCorner3Line)  {
+        if (stage == Settings.stageBlueCorner3Line) {
 
-            if (lightAlpha < Settings.blueLine)  {
+            if (lightAlpha < Settings.blueLine) {
                 leftMotor.setPower(Settings.lineFollowLow);
                 rightMotor.setPower(Settings.lineFollowHigh);
-            }
-             else {
+            } else {
                 leftMotor.setPower(Settings.lineFollowHigh);
                 rightMotor.setPower(Settings.lineFollowLow);
             }
-          if (averagecm > Settings.stage3Distance){
-           rightMotor.setPower(0.0);
-           leftMotor.setPower(0.0);
-           stage=Settings.getStageBlueCorner4Turn;
-          }
+            if (averagecm > Settings.stage3Distance) {
+                rightMotor.setPower(0.0);
+                leftMotor.setPower(0.0);
+                stage = Settings.getStageBlueCorner4Turn;
+            }
 
         }
-       if (stage == Settings.getStageBlueCorner4Turn){
-           leftMotor.setPower(Settings.normalDriveSpeed);
-           rightMotor.setPower(-Settings.normalDriveSpeed);
-           if (Headding > Settings.blueTapeAngle) {
-               leftMotor.setPower(0);
-               rightMotor.setPower(0);
-               stage = Settings.stageBlueCorner5Fire;
+        if (stage == Settings.getStageBlueCorner4Turn) {
+            leftMotor.setPower(Settings.normalDriveSpeed);
+            rightMotor.setPower(-Settings.normalDriveSpeed);
+            if (Headding > Settings.blueTapeAngle) {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                stage = Settings.stageBlueCorner5Fire;
 
-           }
-       }
+            }
+        }
     }
 
     /*
