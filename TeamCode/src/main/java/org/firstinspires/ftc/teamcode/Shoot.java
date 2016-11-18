@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "shoot only", group = "")  // @Autonomous(...) is the other common choice
 
-public class shoot extends OpMode {
+public class Shoot extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     Shooter ballShooter = new Shooter();

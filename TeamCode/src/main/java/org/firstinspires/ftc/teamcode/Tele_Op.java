@@ -59,25 +59,26 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 
 public class Tele_Op extends OpMode {
     /* Declare OpMode members. */
+    shoot doubleShooter = new shoot();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftShootMotor = null;
-    private DcMotor rightShootMotor = null;
-    private DcMotor rightDriveMotor = null;
+     private DcMotor rightDriveMotor = null;
     private DcMotor leftDriveMotor = null;
     private DcMotor sweeperMotor = null;
-    private Servo shootTrigger;
+    
     private Servo beaconServo;
     private boolean rightTriggerPressed;
     private boolean BeaconServoLeft;
     private boolean leftBummperPrevPressed;
-    //private ColorSensor colorSensor;
-    //private GyroSensor gyroSensor;
-
+ 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
+
+        ballShooter.hardwareMap = hardwareMap;
+        ballShooter.telemetry = telemetry;
+        ballShooter.init();
         telemetry.addData("Status", "Initialized");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
@@ -94,7 +95,8 @@ public class Tele_Op extends OpMode {
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         beaconServo = hardwareMap.servo.get("bacon");
-        shootTrigger = hardwareMap.servo.get("trigger");
+        doubleShooter.hardwareMap = hardwareMap;
+        doubleShooter.telemetry = telemetry;
         //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightTriggerPressed = false;
@@ -111,6 +113,7 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void init_loop() {
+        ballShooter.init_loop();
     }
 
     /*
@@ -118,6 +121,7 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void start() {
+		ballShooter.start();
         runtime.reset();
         shootTrigger.setPosition(Settings.reset);
     }
@@ -127,6 +131,7 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void loop() {
+	    ballShooter.loop();
         telemetry.addData("Status", shootTrigger.getPosition());
         telemetry.addData("Status", "Running: " + runtime.toString());
         leftDriveMotor.setPower(-gamepad1.left_stick_y);
@@ -138,8 +143,8 @@ public class Tele_Op extends OpMode {
             rightTriggerPressed = false;
         }
         if (rightTriggerPressed) {
-            leftShootMotor.setPower(Settings.shooterSpeedTeleOP);
-            rightShootMotor.setPower(Settings.shooterSpeedTeleOP);
+            leftShootMotor.setPower(Settings.shooterRPM);
+            rightShootMotor.setPower(Settings.shooterRPM);
         } else {
             leftShootMotor.setPower(0);
             rightShootMotor.setPower(0);

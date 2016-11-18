@@ -38,7 +38,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -141,7 +143,6 @@ public class Corner extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-                shootTrigger.setPosition(Settings.reset);
                 leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
