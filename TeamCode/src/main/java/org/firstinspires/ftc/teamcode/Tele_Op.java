@@ -34,10 +34,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -45,10 +47,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p/>
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p/>
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
@@ -59,15 +61,15 @@ public class Tele_Op extends OpMode {
     /* Declare OpMode members. */
     Shooter ballShooter = new Shooter();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor rightDriveMotor = null;
+     private DcMotor rightDriveMotor = null;
     private DcMotor leftDriveMotor = null;
     private DcMotor sweeperMotor = null;
-
+    
     private Servo beaconServo;
     private boolean rightTriggerPressed;
     private boolean BeaconServoLeft;
     private boolean leftBummperPrevPressed;
-
+ 
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -114,19 +116,16 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void start() {
-        ballShooter.start();
-        ballShooter.setMotorRPM(0);
+		ballShooter.start();
         runtime.reset();
-    }
+        }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
-
-        ballShooter.loop();
-
+	    ballShooter.loop();
         telemetry.addData("Status", "Running: " + runtime.toString());
         leftDriveMotor.setPower(-gamepad1.left_stick_y);
         rightDriveMotor.setPower(-gamepad1.right_stick_y);
@@ -139,9 +138,10 @@ public class Tele_Op extends OpMode {
         if (rightTriggerPressed) {
             ballShooter.setMotorRPM(Settings.shooterRPM);
 
-        } else {
+        }else{
             ballShooter.setMotorRPM(0);
         }
+
         if (gamepad2.left_bumper && leftBummperPrevPressed == false) {
             leftBummperPrevPressed = true;
             BeaconServoLeft = !BeaconServoLeft;
@@ -160,6 +160,7 @@ public class Tele_Op extends OpMode {
         if (gamepad2.right_bumper) {
             ballShooter.shoot();
         }
+
     }
 
     /*
@@ -167,7 +168,6 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void stop() {
-        ballShooter.setMotorRPM(0);
     }
 
 }

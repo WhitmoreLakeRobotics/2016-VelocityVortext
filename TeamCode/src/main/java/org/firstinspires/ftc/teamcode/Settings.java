@@ -7,8 +7,6 @@ package org.firstinspires.ftc.teamcode;
 //test small change
 
 public class Settings {
-    public final static int ticsPerRevoulution = 1440;
-    public final static double wheelCircumfence = 8 * Math.PI; //wheel diameter * PI-
     public static double normalDriveSpeed = 0.5;
     public static int stageBlueCorner1Forward = 1;
     public static int stageBlueCorner2Right = 2;
@@ -16,8 +14,10 @@ public class Settings {
     public static int getStageBlueCorner4Turn = 4;
     public static int stageBlueCorner5Fire = 5;
     public static int blueLine = 15;
-    public static double gearratio = 1 / 1;//motor revolutions /wheel revolution
-    public static double TicsPerCM = (gearratio * ticsPerRevoulution) / wheelCircumfence;
+    public static double gearratio = 1/ 1;//motor revolutions /wheel revolution
+    public final static int ticsPerRevoulution = 1440;
+    public final static double wheelCircumfence = 8*Math.PI; //wheel diameter * PI-
+    public static double TicsPerCM = (gearratio *ticsPerRevoulution)/wheelCircumfence;
     public static int blueTapeAngle = 45;
     public static int fireAngle = 15;
     public static double lineFollowHigh = .8;
@@ -49,12 +49,15 @@ public class Settings {
     public static double bestShooterSpeed = 120 * Math.PI;
     public static int beaconRight = 1;
     public static int beaconLeft = 0;
-    public static int shooterTicksPerRev = 28;
-    public static double shooterMotorMaxRPM = 6000;
-    public static double shooterRPM = 4150;
-
-    public static double Tics2CM(int tics) {
+    public static double Tics2CM (int tics){
         return tics / TicsPerCM;
     }
+    public static int shooterTicksPerRev = 28;
+    public static double shooterMotorMaxRPM = 6000;
+    public static double shooterRPM = 4001;
 }
+
+
+
+
 
